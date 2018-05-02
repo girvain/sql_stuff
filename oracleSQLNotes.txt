@@ -1,0 +1,21 @@
+Catagories of SQL Statements
+DML - data manipulation language
+	INSERT, DELETE, UPDATE, MERGE
+DDL - Data definition language
+	CREATE, ALTER, RENAME, TRUNCATE
+TCL - Transaction Control Language
+	COMMIT, ROLLBACK, SAVEPOINT
+DCL - Data Control Language (used for permissions)
+	GRANT, REVOKE
+
+DESCRIBE (DESC) - shows information about the structure of database.
+
+order of execution SELECT statement
+	FROM
+	WHERE
+	SELECT
+	ORDER
+
+null values are displayed last in a ORDER sort command.
+
+

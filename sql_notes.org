@@ -1,0 +1,103 @@
+SQL - Notes
+
+' ' - sql uses single quotes for strings
+
+* Queries 
+
+SELECT * FROM table
+
+ SELECT DISTINCT * FROM table - returns items but removes doublers
+
+WHERE - allows for use of conditionals
+ 
+LIKE - for similar comparason, use with wildcards.
+	wildcards:
+	% - means any sequence of characters
+	_ means any individual character
+	example: WHERE name LIKE 'gar&'
+
+ IS NULL or IS NOT NULL - is how to check for null values
+
+BETWEEN - is for selecting a range i.e BETWEEN 'C' AND 'G'. Note char's are not including the last letter but numbers are inclusive.
+
+IN - used to test if a value is IN another set of values. Same as writting a series of && operators.:
+	example: WHERE country IN('UK', 'CA');
+
+AND - just means && 
+OR - just means ||
+
+=  means == in sql
+	use ''s for comparing strings.  example: WHERE name = 'frank'
+
+- ORDER BY - is for sorting data. Can be used like SELECT * FROM table WHERE year > 1999 ORDER BY DESC
+  DESC - decending order.
+  ASC - accending order
+
+LIMIT - is the maximum amount of results it will return
+
+CASE - is an if statement foe Sql
+- example
+  SELECT OrderID, Quantity,
+  CASE
+    WHEN Quantity > 30 THEN "The quantity is greater than 30"
+    WHEN Quantity = 30 THEN "The quantity is 30"
+    ELSE "The quantity is something else"
+  END
+  FROM OrderDetails;
+
+AS - Alias, a way of renaming a column for output. 
+	example: SELECT last_name AS name
+	can also be written as: SELECT last_name "name"
+	NOTE: the only time to use " "s
+DESCRIBE (DESC) - shows information about the structure of database. example: DESC tablename;
+
+|| - Concatenation operator
+	example SELECT department_id ||' '|| name
+	FROM departments;
+	NOTE: the ' ' creates a char space between the words, output reads 
+	50 Shipping
+
+DISTINCT - removes duplicates from the output, example: SELECT DISTINCT someshite_id
+
+ORDER OF PRECEDENCE
+	Arithmetic
+	Concatenation
+	Comparason
+	IS NULL, LIKE, IN
+	NOT
+	AND
+	OR
+
+* functions
+UPPER(variable)
+LOWER()
+INITCAP() - make first letter uppercase
+CONCAT(var1, var2) - concatinates 
+SUBSTR(var, number1, number2)
+LENGTH() 
+INSTR(var, 'char') - returns the number position of character
+
+LPAD(var, number, 'char') - Left Padding, creates padding from the number amount. Also has RPAD() - right padding
+
+TRIM(LEADING 'char' FROM 'string') - trims to the right from the 'char' stated. Also has TRAILNG (backwards) and BOTH.
+
+REPLACE(string_words, string_to_replace, replacement_string)
+
+Substitutions - when a query will be re-run with diferent variables. example - WHERE name =: name_input;
+
+ROUND(var, decimal number) 
+TRUNC() - the same as ROUND but works with dates 
+MOD() - Modulo
+* Dates
+	SYSDATE - returns the current database date and time.
+	MONTHS_BETWEEN(date1, date2)  
+	ADD_MONTHS
+	NEXT_DAY(SYSDATE, 'Saturday') - returns the date of next Saturday.
+	LAST_DAY(date) - returns a date of last day of month
+	ROUND(date, 'Month') rounds a date to first day of month.
+	TRUNC(date, 'Month') - chops a date to the Month 
+	TO_DATE(string) - converts a string to date
+
+* Data Types
+	VARCHAR2 - Character data
+	CHAR - 
