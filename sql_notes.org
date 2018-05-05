@@ -1,94 +1,112 @@
 SQL - Notes
 
-' ' - sql uses single quotes for strings
-
 * Queries 
+            
+      SELECT * FROM table
 
-SELECT * FROM table
+      SELECT DISTINCT * FROM table - returns items but removes doublers
 
- SELECT DISTINCT * FROM table - returns items but removes doublers
+      WHERE - allows for use of conditionals
+       
+      LIKE - for similar comparason, use with wildcards.
+            wildcards:
+            % - means any sequence of characters
+            _ means any individual character
+            example: WHERE name LIKE 'gar&'
 
-WHERE - allows for use of conditionals
- 
-LIKE - for similar comparason, use with wildcards.
-	wildcards:
-	% - means any sequence of characters
-	_ means any individual character
-	example: WHERE name LIKE 'gar&'
+       IS NULL or IS NOT NULL - is how to check for null values
 
- IS NULL or IS NOT NULL - is how to check for null values
+      BETWEEN - is for selecting a range i.e BETWEEN 'C' AND 'G'. Note char's are not including the last letter but numbers are inclusive.
 
-BETWEEN - is for selecting a range i.e BETWEEN 'C' AND 'G'. Note char's are not including the last letter but numbers are inclusive.
+      IN - used to test if a value is IN another set of values. Same as writting a series of && operators.:
+            example: WHERE country IN('UK', 'CA');
 
-IN - used to test if a value is IN another set of values. Same as writting a series of && operators.:
-	example: WHERE country IN('UK', 'CA');
+      AND - just means && 
+      OR - just means ||
 
-AND - just means && 
-OR - just means ||
+      =  means == in sql
+            use ''s for comparing strings.  example: WHERE name = 'frank'
 
-=  means == in sql
-	use ''s for comparing strings.  example: WHERE name = 'frank'
+      - ORDER BY - is for sorting data. Can be used like SELECT * FROM table WHERE year > 1999 ORDER BY DESC
+        DESC - decending order.
+        ASC - accending order
 
-- ORDER BY - is for sorting data. Can be used like SELECT * FROM table WHERE year > 1999 ORDER BY DESC
-  DESC - decending order.
-  ASC - accending order
+      LIMIT - is the maximum amount of results it will return
 
-LIMIT - is the maximum amount of results it will return
+      CASE - is an if statement for Sql
+      - example
+        SELECT OrderID, Quantity,
+        CASE
+          WHEN Quantity > 30 THEN "The quantity is greater than 30"
+          WHEN Quantity = 30 THEN "The quantity is 30"
+          ELSE "The quantity is something else"
+        END
+        FROM OrderDetails;
 
-CASE - is an if statement foe Sql
-- example
-  SELECT OrderID, Quantity,
-  CASE
-    WHEN Quantity > 30 THEN "The quantity is greater than 30"
-    WHEN Quantity = 30 THEN "The quantity is 30"
-    ELSE "The quantity is something else"
-  END
-  FROM OrderDetails;
+      AS - Alias, a way of renaming a column for output. 
+            example: SELECT last_name AS name
+            can also be written as: SELECT last_name "name"
+            NOTE: the only time to use " "s
+      DESCRIBE (DESC) - shows information about the structure of database. example: DESC tablename;
 
-AS - Alias, a way of renaming a column for output. 
-	example: SELECT last_name AS name
-	can also be written as: SELECT last_name "name"
-	NOTE: the only time to use " "s
-DESCRIBE (DESC) - shows information about the structure of database. example: DESC tablename;
+      || - Concatenation operator
+            example SELECT department_id ||' '|| name
+            FROM departments;
+            NOTE: the ' ' creates a char space between the words, output reads 
+            50 Shipping
 
-|| - Concatenation operator
-	example SELECT department_id ||' '|| name
-	FROM departments;
-	NOTE: the ' ' creates a char space between the words, output reads 
-	50 Shipping
+      DISTINCT - removes duplicates from the output, example: SELECT DISTINCT someshite_id
 
-DISTINCT - removes duplicates from the output, example: SELECT DISTINCT someshite_id
-
-ORDER OF PRECEDENCE
-	Arithmetic
-	Concatenation
-	Comparason
-	IS NULL, LIKE, IN
-	NOT
-	AND
-	OR
+      ORDER OF PRECEDENCE
+            Arithmetic
+            Concatenation
+            Comparason
+            IS NULL, LIKE, IN
+            NOT
+            AND
+            OR
 
 * functions
-UPPER(variable)
-LOWER()
-INITCAP() - make first letter uppercase
-CONCAT(var1, var2) - concatinates 
-SUBSTR(var, number1, number2)
-LENGTH() 
-INSTR(var, 'char') - returns the number position of character
+      UPPER(variable)
+      LOWER()
+      INITCAP() - make first letter uppercase
+      CONCAT(var1, var2) - concatinates 
+      SUBSTR(var, number1, number2)
+      LENGTH() 
+      INSTR(var, 'char') - returns the number position of character
 
-LPAD(var, number, 'char') - Left Padding, creates padding from the number amount. Also has RPAD() - right padding
+      LPAD(var, number, 'char') - Left Padding, creates padding from the number amount. Also has RPAD() - right padding
 
-TRIM(LEADING 'char' FROM 'string') - trims to the right from the 'char' stated. Also has TRAILNG (backwards) and BOTH.
+      TRIM(LEADING 'char' FROM 'string') - trims to the right from the 'char' stated. Also has TRAILNG (backwards) and BOTH.
 
-REPLACE(string_words, string_to_replace, replacement_string)
+      REPLACE(string_words, string_to_replace, replacement_string)
 
-Substitutions - when a query will be re-run with diferent variables. example - WHERE name =: name_input;
+      Substitutions - when a query will be re-run with diferent variables. example - WHERE name =: name_input;
 
-ROUND(var, decimal number) 
-TRUNC() - the same as ROUND but works with dates 
-MOD() - Modulo
-* Dates
+      ROUND(var, decimal number) 
+      TRUNC() - the same as ROUND but works with dates 
+      MOD() - Modulo
+
+      - TO_CHAR()
+            TO_CHAR(date_var, 'Month dd, YYYY) -Dates have loads of formats,
+                  this is just one of them.
+
+            TO_CHAR(number_var, 'format model') - same as above but with number
+            formats.
+
+      - TO_NUMBER()
+           TO_NUMBER(string_var, 'format') - format model is optional in this
+           method. 
+           NOTE: oracle will do data conversions automatically when using
+           comparisons
+      
+      TO_DATE(char_string, 'format')
+
+      fx - modifier that keeps string data in the exact format when
+      converted, e.g when using a TO_DATE function
+      
+
+* Date functions
 	SYSDATE - returns the current database date and time.
 	MONTHS_BETWEEN(date1, date2)  
 	ADD_MONTHS
@@ -98,6 +116,60 @@ MOD() - Modulo
 	TRUNC(date, 'Month') - chops a date to the Month 
 	TO_DATE(string) - converts a string to date
 
+* Date Formats
+
+* Currency Formats
+
 * Data Types
-	VARCHAR2 - Character data
-	CHAR - 
+	VARCHAR2 - Character data of variable length
+      CHAR - Character data of fixed length
+      NUMBER - variable number data
+      DATE
+
+* Null value functions
+      NVL(arg1, arg2) - both arguments can be a variable or an expression. If
+            arg1 gives a NULL value, it assings the value or arg2.
+      NVL2(arg1, arg2, arg3) - same as above but not null returns arg2, NULL
+            value returns arg3
+      NULLIF(arg1, arg2) - returns null if arg1 and arg2 are equal, else
+            returns arg1
+      COALESCE(arg1, arg2, argN) - same as NVL but will continue through all
+            args. Can also take a value at the end to return if all args are
+            NULL
+
+* JOINS 
+NATURAL JOIN - basic way to join two tables. 
+example: FROM table NATURAL JOIN other_table
+Note: dosen't work with same column name, diferent data types
+
+CROSS JOIN - returns all possible cominations from the joining of tables 
+      NOTE: oracle call this a "cartesian product"
+
+USING - this allows to select which colum to use from NATURAL JOIN
+      Example: FROM table NATURAL JOIN other_table USING (table_id);
+      Note: use for joining table columns with the same name, diferent data
+      type.
+
+ON - use the on clause when the JOIN table names are diferent.
+      Example: 
+      
+INNER JOIN - a join of two tables that only returns the matching rows
+
+OUTER JOIN - when a join returns matched and unmatched rows
+
+RIGHT OUTER JOIN - Return all records from the right table, and the matched records from the left  
+
+LEFT OUTER JOIN - Return all records from the left table, and the matched records from the right table
+
+FULL OUTER JOIN - Return all records when there is a match in either left or right table
+
+equi-join - oracle jargon for a NATURAL JOIN, JOING USING "column", JOIN ON
+      (equality operator) = 
+
+non equi-join - oracle jargon for a JOIN ON 
+
+* Hierarcical queries
+START WITH 
+CONNECTED BY PRIOR
+LEVEL - provides numbers to list the level of hierarchy in report
+
