@@ -1,3 +1,4 @@
+
 SQL - Notes
 
 * Queries 
@@ -169,7 +170,40 @@ equi-join - oracle jargon for a NATURAL JOIN, JOING USING "column", JOIN ON
 non equi-join - oracle jargon for a JOIN ON 
 
 * Hierarcical queries
-START WITH 
-CONNECTED BY PRIOR
-LEVEL - provides numbers to list the level of hierarchy in report
+  START WITH 
+  CONNECTED BY PRIOR
+  LEVEL - provides numbers to list the level of hierarchy in re
+* Group Functions
+** Count 
+   returns the number of non null values in a column
+** count(*)
+   returns the number of rows in a table
+** Distinct
+   returns the number of unique values in a column
+* Subquery
+  A subquery is a nested query in brackets, that is part of a bigger query.
 
+** Group Functions
+   group functions when used in subqueries return a single 
+** IN, ANY, ALL 
+   used for connecting subqueries. ANY is like a if true statement for a list of data.
+   All is the same but all the list items must match the conditionals.
+   Note: IN and ANY return null values, ALL will not.
+*** example
+    SELECT last_name, hire_dateFROM employees
+    WHERE EXTRACT(YEAR FROM hire_date) < ALL
+    (SELECT EXTRACT(YEAR FROM hire_date)
+    FROM employees
+    WHERE department_id=90);
+* GROUP BY 
+  groups all the matching data in a column together
+  - example:
+    SELECT department_id, MAX(salary)
+    FROM employees
+    GROUP BY department_id;
+  
+  This will put put all the data with matching department_id's
+  together and the apply the MAX(salary) method to the data, 
+  which will output ONLY one department_id and salary.
+  Group by statements appear to be evaluated first, then the 
+  command on the grouping.
