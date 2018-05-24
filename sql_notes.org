@@ -207,3 +207,9 @@ non equi-join - oracle jargon for a JOIN ON
   which will output ONLY one department_id and salary.
   Group by statements appear to be evaluated first, then the 
   command on the grouping.
+  
+  Groups withing groups.
+  - example:
+    SELECT department_id, MAX(salary)
+    FROM employees
+    GROUP BY department_id department_name;
