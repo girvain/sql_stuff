@@ -213,3 +213,57 @@ non equi-join - oracle jargon for a JOIN ON
     SELECT department_id, MAX(salary)
     FROM employees
     GROUP BY department_id department_name;
+** HAVING
+   having is used to restrict groups, similar to the WHERE clause being used to restrict rows.
+   - example
+     SELECT region_id, ROUND(AVG(population))
+     FROM wf_countries
+   GROUP BY region_id 
+   HAVING MIN(population) > 3000000
+   ORDER BY region_id;
+** rollup
+   the rollup action adds up the values of each group in a group by clause, then gives you a 
+   grand total at the end.
+   example:
+   - SELECT department_id, job_id, SUM(salary)
+     FROM employees
+     WHERE department_id < 50
+     GROUP BY ROLLUP (department_id, job_id);
+** CUBE
+   groups the selected groups by ALL cominations possible
+** GROUPING SETS
+   lets you perform multiple grouping sets in one querie
+   example:
+   - SELECT department_id, job_id, manager_id, SUM(salary)
+     FROM employees
+     WHERE department_id < 50
+     GROUP BY GROUPING SETS
+     ((job_id, manager_id), (department_id, job_id), (department_id, manager_id));
+
+** GROUPING functions
+   The GROUPING functions will return 1 for an computed row and 0 for a returned row. This
+   is so that they are labeled when they are returned form the query.
+
+   Or jsut name them with the syntax
+   SELECT department_id, job_id, SUM(salary),
+   GROUPING(department_id) AS "Dept sub total",
+   GROUPING(job_id) AS "Job sub total"
+* SETS
+** UNION
+   joins two tables and returns rows from both tabels with NO dublicates. (one of each doubler)
+** UNION ALL 
+   joins two tables and returns all form both tables.
+** INTERSECT
+   joins two tables and returns only rows common to both tables. (only one of each match)
+** MINUS
+   returns all rows found in one table but not the other.
+** the syntax 
+   SELECT table1
+   FROM employees
+     UNION
+   SELECT table2
+   FROM job_history
+
+** aditional notes
+*** when comparing tables with a missing column to match you can create one, i.e TODATE(null_)
+*** 
