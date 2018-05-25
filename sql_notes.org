@@ -270,6 +270,10 @@ non equi-join - oracle jargon for a JOIN ON
 * CREATING (dml)
 ** CREATE TABLE
    CREATE TABLE tablename (column_name datatype, ... );
+
+   or with a DEFAULT type
+   CREATE TABLE table
+   (name DATE DEFAULT SYSDATE);
 ** copy a table
    CREATE TABLE copy_tablename
      AS  (SELECT * FROM tablename );
@@ -349,6 +353,13 @@ non equi-join - oracle jargon for a JOIN ON
        VALUES (hire_date, first_name, last_name)
    SELECT hire_date, first_name, last_name
    FROM employees;
-
+   
 * Creating Tables
-  
+** table access
+   if its not your table use this syntax
+   - SELECT *
+     FROM table_owner_name.table_name;
+** External table
+   when the data is not held in the database files but in a flat file stored 
+   externally to the database
+   syntax is written as ORGANISATION EXTERNAL
