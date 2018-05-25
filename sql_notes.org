@@ -267,7 +267,7 @@ non equi-join - oracle jargon for a JOIN ON
 ** aditional notes
 *** when comparing tables with a missing column to match you can create one, i.e TODATE(null_)
 *** 
-* CREATE
+* CREATING (dml)
 ** CREATE TABLE
    CREATE TABLE tablename (column_name datatype, ... );
 ** copy a table
@@ -326,3 +326,29 @@ non equi-join - oracle jargon for a JOIN ON
    locks rows or tables in a database until user issues a rollback
    or COMMIT
    
+** DEFAULT
+   use the word DEFAULT for any value to be a default value
+** MERGE
+   merge will insert and update similtaneosly, if a value is missing, a new one will
+   be inserted.
+   example:
+   MERGE INTO copy_table c USING employees e 
+     ON (c.employee_id = e.employee_id)
+   WHEN MATCHED THEN UPDATE
+     SET
+        c.last_name = e.last_name,
+        c.department_id = e.department_id
+   WHEN NOT MATCHED THEN INSERT
+     VALUES (e.employee_id, e.last_name, e.department_id);
+
+** multi table insert
+   INSERT ALL
+     INTO my_employees
+       VALUES (hire_date, first_name, last_name)
+     INTO copy_my_employees
+       VALUES (hire_date, first_name, last_name)
+   SELECT hire_date, first_name, last_name
+   FROM employees;
+
+* Creating Tables
+  
