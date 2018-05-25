@@ -267,3 +267,62 @@ non equi-join - oracle jargon for a JOIN ON
 ** aditional notes
 *** when comparing tables with a missing column to match you can create one, i.e TODATE(null_)
 *** 
+* CREATE
+** CREATE TABLE
+   CREATE TABLE tablename (column_name datatype, ... );
+** copy a table
+   CREATE TABLE copy_tablename
+     AS  (SELECT * FROM tablename );
+** DESCRIBE
+
+** INSERT
+   inserts rows into tables
+   example:
+
+   INSERT INTO copy_departments
+     (department_id, department_name, manager_id, location_id)
+   VALUES 
+     (200, 'Human REsources', 205, 1500);
+** UPDATE
+   UPDATE employees
+   SET phone_number = '123456'
+   WHERE employee_id = 303;
+   
+*** multiple row example:
+      UPDATE employees
+      SET phone_number = '123456', last_name = 'Jones'
+      WHERE employee_id = 303;
+*** subquery example
+    UPDATE employees
+    SET SALARY = (SELECT salary
+                  FROM employees
+                  WHERE employee_id = 100)
+    WHERE employee_id = 303;
+*** multiple row subquery example
+    UPDATE employees
+    SET salary = (SELECT salary
+                  FROM employees
+                  WHERE employee_id = 100)
+        job_id = (SELECT job_id
+                  FROM employees
+                  WHERE employee_id = 205)
+    WHERE employee_id = 303;
+*** update using correlated syntax
+    UPDATE employees e
+    SET e.department_name = (SELECT salary
+                            FROM employees
+                            WHERE employee_id = 100)
+    
+** DELETE
+   DELETE from employees
+   WHERE employee_id = 303;
+*** DELETE with subquery
+    DELETE FROM employees
+    WHERE department_id =
+      (SELECT department_id
+      FROM departments
+      WHERE department_name = 'shipping');
+** FOR UPDATE
+   locks rows or tables in a database until user issues a rollback
+   or COMMIT
+   
