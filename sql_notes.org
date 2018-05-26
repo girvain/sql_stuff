@@ -363,3 +363,32 @@ non equi-join - oracle jargon for a JOIN ON
    when the data is not held in the database files but in a flat file stored 
    externally to the database
    syntax is written as ORGANISATION EXTERNAL
+** data types
+   columns can only hold one data type
+*** CHAR
+    variable size, max size 2000 characters
+*** VARCHAR 
+    variable size, max size 4000 characters
+*** CLOB 
+    variable size, max 128 TB
+*** NUMBER
+    VARIABLE SIZE, max precision 38 digits
+*** DATE, 
+    
+*** TIMESTAMP,
+    an extension of date which allows fractions of a second
+*** TIMESTAMP WITH TIME ZONE
+    same but with a displacement from UTC or GMT.
+*** TIMEZONE WITH TIME ZONE
+    same but time is auto converted to users timezone
+*** INTERVAL
+**** INTERVAL YEAR TO MONTH
+     stores a period of time measured in yeares and months
+**** INTERVAL DAY TO SECOND
+     stores a period of time measured in days, hours, minutes and seconds
+    
+*** binary values (WAV, JPG etc)
+**** RAW
+     variable size, max 2000 bytes
+**** BLOB
+     variable size, maximum 128 TB
