@@ -386,9 +386,223 @@ non equi-join - oracle jargon for a JOIN ON
      stores a period of time measured in yeares and months
 **** INTERVAL DAY TO SECOND
      stores a period of time measured in days, hours, minutes and seconds
-    
+     
 *** binary values (WAV, JPG etc)
 **** RAW
      variable size, max 2000 bytes
 **** BLOB
      variable size, maximum 128 TB
+** ALTER TABLE
+   used to add, modify/define defaults and drop Columns (drop means delete)
+   example:
+   - ALTER TABLE tablename
+     ADD (colum_name DATE DEFAULT SYSDATE)
+
+   - ALTER TABLE my_friends
+     ADD (favorite_game VARCHAR2(30));
+
+   - ALTER TABLE my_friends
+     MODIFY (favorite_game VARCHAR2(30));
+   
+   - ALTER TABLE my_friends
+     DROP (favorite_game );
+
+   to drop a table and bypass the recycle bin:
+   - DROP TABLE table_name PURGE;
+
+
+*** rules for ALTER TABLE (modifys)
+    you can increase the width of number columns
+    you can increase the width of a character column
+    you can decrease the width of a NUMBER column if it only contains null values or no rows
+    for VARCHAR, you can decrease the width down to largest value contained in column
+    you can change the datatype if the column has only null values
+    you can convert CHAR to VARCHAR2 or vice versa
+    a change to a DEFAULT statement only affact new data added
+    
+*** UNUSED
+    a column can be marked as unused instead of deleting to save time
+    - ALTER TABLE tablename SET UNUSED (column_name);
+    
+    also DROP can be used to drop all unused columns with DROP UNUSED COLUMNS;
+
+*** FLASHBACK TABLE
+    used to bring back a deleted table, view or index
+    example:
+    - FLASHBACK TABLE tablename TO BEFORE DROP;
+    
+    also the user recycle bin can be accessed like so 
+    - SELECT original_name, operation, droptime
+      FROM user_recyclebin
+*** RENAME
+    used to rename a table
+    RENAME old_name TO new_name;
+*** TRUNCATE
+    truncate removes all rows from the table and releases the storage space used by that table.
+    You must be the owner of the table and it can't be rolled back when completed.
+    example:
+    - TRUNCATE TABLE tablename;
+*** COMMENT ON TABLE
+    add comments to a table
+    example:
+    - COMMENT ON TABLE table_name
+        IS 'place your comment here'
+*** FLASHBACK QUERY
+    oracle auto commits changes and the flashback query can be used to restore previous verisons
+    like GIT.
+    example:
+    SELECT employee_id, first_name || ' ' || last_name AS "NAME" ,
+                           versions_operation AS "OPERATION" ,
+                           versions_starttime AS "START_DATE" ,
+                           versions_endtime AS "END_DATE" , salary
+    FROM copy_employees
+      VERSIONS BETWEEN SCN MINVALUE AND MAXVALUE
+    WHERE employee_id = 1;
+* Constraints
+  constraints are rules
+  constraints are stored in the Data Dictionary
+  they prevent delection of tables if they have dependancies
+** Constraints at column level
+   CREATE TABLE clients
+   (client_numner NUMBER(4) CONSTRAINT clients_cleint_num_pk PRIMARY KEY,
+     first_name VARCHAR(14));
+   
+   this enforces that the client_number is the primary key
+** Constraints at Table level
+   CREATE TABLE clients (
+   client_number NUMBER(6) NOT NULL,
+   first_name VARCHAR(20),
+   phone VARCHAR(20),
+   email VARCHAR(10)
+   CONSTRAINT clients_phone_email_uk UNIQUE (email, phone));
+   
+   NOT NULL constraints must be defined at column level
+** Five types of constaraints
+   NOT NULL - used the suffix _nn example: table_column_nn
+   UNIQUE - uses the suffix _uk
+   PRIMARY KEY - _pk
+   FOREIGN KEY - _fk
+   CHECK - _ck
+** composite PRIMARY KEY
+   these must be defined at the table level
+** FORIEGN KEY CONSTRAINT
+   example:
+   ..... other variables ..
+   department_id NUMBER(4, 0) CONSTAINT c_emps_dept_id_fk
+                                REFERENCES departments(department_id),
+   .... etc
+   
+   the referneces part is a reference to the table and column in the parent table.
+** ON DELETE CASCADE
+   this is the permission for a parent table to delete rows in the child table from the 
+   pk fk relationship.
+   if the ON delete cascade is not specified in the CONSTRAINT then you can't delete any rows
+   with dependancies.
+   
+   example:
+   ..... other variables ..
+   department_id NUMBER(4, 0) CONSTAINT c_emps_dept_id_fk
+                                REFERENCES departments(department_id) ON DELETE CASCADE;
+   .... etc
+  
+   using this, the row will be deleted when deleting form the parent table.
+
+   also ON DELETE SET NULL will do the same but set values to null instead.
+** CHECK CONSTRAINT
+   add them to the CONSTAINTS 
+   example:
+   CONSTRAINT table_column_ck CHECK (endtime > starttime);
+   
+*** rules of check constraints
+    must be on the row where constraint is defined
+    can't be used in queries that refer to values in other rows
+    can't have calls to functions
+** Adding Constraints
+   syntax:
+   ALTER TABLE table_name
+   ADD CONSTRAINT constraint_name TYPE_OF_CONSTRAINT(column_name) REFERENCES table_name(column_name);
+** DROP CONSTRAINT
+   deletes the constraint
+** DISABLE CONSTRAINT
+   ALTER TABLE table_name
+   DIABLE CONSTRAINT constraint_name;
+
+   or in the create statement 
+   CREATE TABLE table_name
+   (employee_id NUMBER(5) PRIMARY KEY DISABLE);
+
+   adding CASCADE to the end disables dependancies
+
+** ENABLE CONSTRAINT
+   ALTER TABLE table_name
+   ENABLE CONSTRAINT constraint_name;
+** cascading constraints
+   to drop all constraints use
+   ALTER TABLE table_name
+   DROP (column name(s)) CASCADE CONSTRAINTS;
+** Viewing Constraints
+   you must query the USER_CONSTRAINTS TABLE
+   SELECT ... FROM USER_CONSTRAINTS
+   WHERE ... ;
+* Views
+  A view is a database object which is a representation of data. Views are stored as SELECT statements in the
+  DATA DICTIONARY.
+** OR REPLACE
+   re-create the view if already exists, can use this instead of DROP and re creating it.
+** FORCE
+   Creates the view weather or not the base table exits
+** NOFORCE
+   creates the view only if the base table exists
+** WITH CHECK OPTION
+   specifies that rows remain accessible to the view after insert or update operations
+** WITH READ ONLY
+   Ensures that no DML operations can be performed on this view.
+
+ example
+ CREATE OR REPLACE VIEW view_countries
+ AS SELECT ...
+   FROM countries
+   WHERE something LIKE 'Europe';
+
+ SELECT * FROM view_countries;
+** simple or complex Views
+   if a table has functions, more than one table used or can contain groups ir is "Complex"
+   Otherwise it is a "simple" View.
+   Complex views can't always perform DML operations, Simple views can.
+** WITH CHECK OPTION
+   a user can have access to INSERT, UPDATE and DELETE data for rows in the view unless the WITH CHECK OPTION is added
+   example:
+   CREATE OR REPLACE VIEW view_dept50
+   AS SELECT department_id, employee_id, ifrst_name, last_name, salart
+     FROM employees
+     WHERE department_id = 50
+   WITH CHECK OPTION CONSTRAINT view_dept_50_check;
+** WITH READ ONLY
+   ensures that no DML operations occur through the view.
+   same as above but add WITH READ ONLY;
+** dml restrictions for doing DML through a VIEW 
+   can't remove a row if it has a group function, GROUP BY clause, the word DISTINCT or ROWNUM
+   can't modify data if it has the same as above plus columns defined by expressions
+   can't add data if its the same as above plus if it dosen't have NOT NULL columns in the base tables.
+** removing a view
+   syntax:
+   DROP VIEW viewname;
+** Inline view
+   a subquery in the FROM clause of a regular statement.
+** TOP-N-ANALYSIS
+   an sql operation used to rank results.
+   example:
+   SELECT ROWNUM AS "longest employed", last_name, hire_date
+   FROM (SELECT last_name, hire_date
+         FROM employees
+         ORDER BY hire_date)
+   WHERE ROWNUM <=5;
+** ROWNUM
+   assigns a row number to the results set of a query
+* sequences
+  a sequence is a sharable object used to auto generate unique numbers, typically used to generate
+  primary key values.
+  syntax:
+  CREATE SEQUENCE sequence
+    
+
